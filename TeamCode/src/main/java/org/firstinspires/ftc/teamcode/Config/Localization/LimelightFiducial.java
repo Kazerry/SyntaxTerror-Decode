@@ -7,7 +7,7 @@ import com.qualcomm.hardware.limelightvision.LLResultTypes.FiducialResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import java.util.List;
 
-public class Limelight {
+public class LimelightFiducial {
 
     private Limelight3A limelight;
     private Follower follower;
@@ -20,9 +20,9 @@ public class Limelight {
     /**
      * Initialize the Limelight
      */
-    public void LimelightInit(Limelight3A limelight, Follower follower) {
+    public void LimelightInit(Limelight3A limelight) { //, Follower follower
         this.limelight = limelight;
-        this.follower = follower;
+        //this.follower = follower;
         limelight.start();
         limelight.pipelineSwitch(0);
     }

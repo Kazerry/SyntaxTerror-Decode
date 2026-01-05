@@ -73,7 +73,7 @@ public class ExampleTeleOp extends OpMode {
                     true // Robot Centric
             );
         }
-
+/*
         //Automated PathFollowing
         if (gamepad1.aWasPressed()) {
             follower.followPath(pathChain.get());
@@ -85,7 +85,7 @@ public class ExampleTeleOp extends OpMode {
             follower.startTeleopDrive();
             automatedDrive = false;
         }
-
+*/
         //Slow Mode
         if (gamepad1.rightBumperWasPressed()) {
             slowMode = !slowMode;
