@@ -10,14 +10,17 @@ import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.bylazar.telemetry.PanelsTelemetry;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 import java.util.function.Supplier;
+import java.lang.Math.*;
 
 @Configurable
 @TeleOp
-public class ExampleTeleOp extends OpMode {
+public class TurretOPRed extends OpMode {
     private Follower follower;
     public static Pose startingPose; //See ExampleAuto to understand how to use this
     private boolean automatedDrive;
@@ -25,6 +28,9 @@ public class ExampleTeleOp extends OpMode {
     private TelemetryManager telemetryM;
     private boolean slowMode = false;
     private double slowModeMultiplier = 0.5;
+    //private DcMotorEx TurretMotor;
+    private DcMotorEx IntakeMotor;
+    private DcMotorEx OTMotor;
 
     @Override
     public void init() {
@@ -32,6 +38,19 @@ public class ExampleTeleOp extends OpMode {
         follower.setStartingPose(startingPose == null ? new Pose() : startingPose);
         follower.update();
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+
+        /*TurretMotor = hardwareMap.get(DcMotorEx.class, "TurretMotor");
+        TurretMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        TurretMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        TurretMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);*/
+        OTMotor = hardwareMap.get(DcMotorEx.class, "OTMotor");
+        OTMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        OTMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        OTMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        IntakeMotor = hardwareMap.get(DcMotorEx.class, "IntakeMotor");
+        IntakeMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        IntakeMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        IntakeMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
         pathChain = () -> follower.pathBuilder() //Lazy Curve Generation
                 .addPath(new Path(new BezierLine(follower::getPose, new Pose(45, 98))))
@@ -96,10 +115,10 @@ public class ExampleTeleOp extends OpMode {
             slowModeMultiplier += 0.25;
         }
 
-        //Optional way to change slow mode strength
-        if (gamepad2.yWasPressed()) {
-            slowModeMultiplier -= 0.25;
-        }
+        //TurretMotor.setPower(gamepad2.right_stick_x*0.25);
+        OTMotor.setPower(gamepad2.right_stick_y);
+        IntakeMotor.setPower(gamepad1.left_stick_y);
+
 
         telemetryM.debug("position", follower.getPose());
         telemetryM.debug("velocity", follower.getVelocity());

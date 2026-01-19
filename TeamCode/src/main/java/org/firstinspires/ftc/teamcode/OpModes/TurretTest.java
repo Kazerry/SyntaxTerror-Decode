@@ -25,7 +25,7 @@ public class TurretTest extends OpMode {
     public static double kP = 0.02;
     public static double kI = 0.00;
     public static double kD = 0.001;
-    private double error = TX;
+    public static double DeadDeg = 1.5;
     private double setpoint = 0;
 
     @Override
@@ -63,6 +63,19 @@ public class TurretTest extends OpMode {
         double tx = fiducials.get(0).getTargetXDegrees();
         turretPower = pid.calculate(tx);
         turretPower = Math.max(-0.6, Math.min(0.6, turretPower));
+        //turretPower *= Math.min(1, Math.abs(tx) / deadband); //Output taper
         TurretMotor.setPower(turretPower);
+
+        //Stop if within deadband
+        if (Math.abs(tx) < DeadDeg) {
+            TurretMotor.setPower(0);
+            pid.reset();
+        }
+
+        telemetry.addData("TX in degrees", tx);
+        telemetry.addData("kP Proportional", kP);
+        telemetry.addData("kI Integral", kI);
+        telemetry.addData("kD Derivative", kD);
+        telemetry.addData("Turret Power", turretPower);
     }
 }
