@@ -21,7 +21,7 @@ public class AutoTopBlue extends OpMode{
 
     private DcMotorEx IntakeMotor;
 
-    private final Pose startPose = new Pose(54, 7.5);
+    private final Pose startPose = new Pose(54, 7.5, Math.toRadians(90));
     private final Pose intakePose = new Pose(10,8);
     private final Pose shootPose = new Pose(70,20);
 
@@ -45,24 +45,32 @@ public class AutoTopBlue extends OpMode{
                 setPathState(1);
                 break;
             case 1:
-                setActionState(1);
-                follower.setMaxPower(1);
-                follower.followPath(shoot1);
-                setPathState(2);
+                if(follower.atParametricEnd()) {
+                    setActionState(1);
+                    follower.setMaxPower(1);
+                    follower.followPath(shoot1);
+                    setPathState(2);
+                }
                 break;
             case 2:
-                setActionState(2);
-                if(actionTimer.getElapsedTime() >= 5) {
-                    setPathState(3);
-                break;
+                if(follower.atParametricEnd()) {
+                    setActionState(2);
+                    if (actionTimer.getElapsedTime() >= 5) {
+                        setPathState(3);
+                    }
                 }
+                break;
             case 3:
-                setActionState(3);
-                follower.followPath(return1);
-                setPathState(4);
+                if(follower.atParametricEnd()) {
+                    setActionState(3);
+                    follower.followPath(return1);
+                    setPathState(4);
+                }
                 break;
             case 4:
+                if(follower.atParametricEnd()){
 
+                }
                 break;
         }
     }
@@ -105,8 +113,8 @@ public class AutoTopBlue extends OpMode{
 
 
         pathTimer = new Timer();
+        actionTimer = new Timer();
         opmodeTimer = new Timer();
-        opmodeTimer.resetTimer();
 
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
