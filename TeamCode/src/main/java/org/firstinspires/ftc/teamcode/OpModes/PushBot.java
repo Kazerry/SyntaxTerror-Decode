@@ -74,8 +74,8 @@ public class PushBot extends OpMode {
 
                 //This is how it looks with slowMode on
             else follower.setTeleOpDrive(
-                    -gamepad1.left_stick_y * slowModeMultiplier,
                     -gamepad1.left_stick_x * slowModeMultiplier,
+                    -gamepad1.left_stick_y * slowModeMultiplier,
                     -gamepad1.right_stick_x * slowModeMultiplier,
                     false // Field Centric
             );
@@ -108,6 +108,7 @@ public class PushBot extends OpMode {
 
         telemetryM.debug("position", follower.getPose());
         telemetryM.debug("velocity", follower.getVelocity());
+        telemetryM.debug("slowMode boolean",slowMode);
         telemetryM.debug("automatedDrive", automatedDrive);
     }
 }
