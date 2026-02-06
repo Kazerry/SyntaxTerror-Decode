@@ -10,6 +10,7 @@ import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.bylazar.telemetry.PanelsTelemetry;
 
@@ -32,6 +33,8 @@ public class TurretOPRed extends OpMode {
     private DcMotorEx IntakeMotor;
     private DcMotorEx OTMotor;
 
+    private CRServo tServo;
+
     @Override
     public void init() {
         follower = Constants.createFollower(hardwareMap);
@@ -51,6 +54,8 @@ public class TurretOPRed extends OpMode {
         IntakeMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         IntakeMotor.setDirection(DcMotorEx.Direction.FORWARD);
         IntakeMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+
+        tServo = hardwareMap.get(CRServo.class, "tServo");
 
         pathChain = () -> follower.pathBuilder() //Lazy Curve Generation
                 .addPath(new Path(new BezierLine(follower::getPose, new Pose(45, 98))))
@@ -110,15 +115,15 @@ public class TurretOPRed extends OpMode {
             slowMode = !slowMode;
         }
 
-        //Optional way to change slow mode strength
-        if (gamepad1.xWasPressed()) {
-            slowModeMultiplier += 0.25;
-        }
-
         //TurretMotor.setPower(gamepad2.right_stick_x*0.25);
-        OTMotor.setPower(gamepad2.right_stick_y);
-        IntakeMotor.setPower(gamepad1.left_stick_y);
-
+        if (gamepad2.right_stick_y >= 0.5 || gamepad1.right_trigger >= 0.5) {
+            OTMotor.setPower(1);
+            tServo.setPower(1);
+        }
+        if (gamepad2.left_stick_y >= 0.5 || gamepad1.left_trigger >= 0.5) {
+            IntakeMotor.setPower(1);
+            tServo.setPower(1);
+        }
 
         telemetryM.debug("position", follower.getPose());
         telemetryM.debug("velocity", follower.getVelocity());
