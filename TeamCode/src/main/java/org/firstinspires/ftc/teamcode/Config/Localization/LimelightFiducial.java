@@ -24,7 +24,6 @@ public class LimelightFiducial {
         this.limelight = limelight;
         //this.follower = follower;
         limelight.start();
-        limelight.pipelineSwitch(0);
     }
     /** Get the latest pose from the Limelight
      * Use this to update in the background

@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.OpModes;
 import static org.firstinspires.ftc.teamcode.Config.Localization.LimelightFiducial.TX;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -11,6 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.arcrobotics.ftclib.controller.PIDController;
 
 import org.firstinspires.ftc.teamcode.Config.Localization.LimelightFiducial;
+import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 import java.util.List;
 
@@ -27,12 +30,19 @@ public class TurretTest extends OpMode {
     public static double kD = 0.001;
     public static double DeadDeg = 1.5;
     private double setpoint = 0;
+    private Follower follower;
+    private Pose startingPose;
 
     @Override
     public void init() {
+        follower = Constants.createFollower(hardwareMap);
+        follower.setStartingPose(startingPose == null ? new Pose() : startingPose);
+        follower.update();
+
         TurretMotor = hardwareMap.get(DcMotorEx.class, "TurretMotor");
 
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        limelight.pipelineSwitch(1);
         LimeInit = new LimelightFiducial();
         LimeInit.LimelightInit(limelight);
         pid = new PIDController(kP, kI, kD);
@@ -44,20 +54,22 @@ public class TurretTest extends OpMode {
 
     @Override
     public void start(){
+        follower.startTeleopDrive();
     }
 
     @Override
     public void loop(){
         LimeInit.getLimePose();
+        follower.update();
 
         com.qualcomm.hardware.limelightvision.LLResult result = limelight.getLatestResult();
         if (result == null || !result.isValid()) {
-            TurretMotor.setPower(0);
+            TurretMotor.setPower(gamepad2.left_stick_x);
             return;
         }
         List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults();
         if (fiducials.isEmpty()) {
-            TurretMotor.setPower(0);
+            TurretMotor.setPower(gamepad2.left_stick_x);
             return;
         }
         double tx = fiducials.get(0).getTargetXDegrees();
@@ -77,5 +89,6 @@ public class TurretTest extends OpMode {
         telemetry.addData("kI Integral", kI);
         telemetry.addData("kD Derivative", kD);
         telemetry.addData("Turret Power", turretPower);
+        telemetry.update();
     }
 }

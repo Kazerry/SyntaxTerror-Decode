@@ -10,7 +10,9 @@ import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
@@ -36,8 +38,8 @@ public class PushBot extends OpMode {
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
 
         IntakeMotor = hardwareMap.get(DcMotorEx.class, "IntakeMotor");
-        IntakeMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        IntakeMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        IntakeMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        IntakeMotor.setDirection(DcMotorEx.Direction.REVERSE);
         IntakeMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
         pathChain = () -> follower.pathBuilder() //Lazy Curve Generation
@@ -104,7 +106,7 @@ public class PushBot extends OpMode {
         }
 
         //Optional way to change slow mode strength
-        IntakeMotor.setPower(gamepad2.left_stick_y);
+        IntakeMotor.setPower(gamepad2.left_stick_y*-100); //We love over voltage
 
         telemetryM.debug("position", follower.getPose());
         telemetryM.debug("velocity", follower.getVelocity());

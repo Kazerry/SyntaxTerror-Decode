@@ -52,7 +52,7 @@ public class TurretOPRed extends OpMode {
         OTMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         IntakeMotor = hardwareMap.get(DcMotorEx.class, "IntakeMotor");
         IntakeMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        IntakeMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        IntakeMotor.setDirection(DcMotorEx.Direction.REVERSE);
         IntakeMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
         tServo = hardwareMap.get(CRServo.class, "tServo");
@@ -121,7 +121,7 @@ public class TurretOPRed extends OpMode {
             tServo.setPower(1);
         }
         if (gamepad2.left_stick_y >= 0.5 || gamepad1.left_trigger >= 0.5) {
-            IntakeMotor.setPower(1);
+            IntakeMotor.setPower(100);
             tServo.setPower(1);
         }
 

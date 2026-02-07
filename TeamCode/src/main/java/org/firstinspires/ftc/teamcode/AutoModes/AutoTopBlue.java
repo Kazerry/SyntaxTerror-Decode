@@ -118,7 +118,7 @@ public class AutoTopBlue extends OpMode{
         TurretMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         IntakeMotor = hardwareMap.get(DcMotorEx .class, "IntakeMotor");
         IntakeMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        IntakeMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        IntakeMotor.setDirection(DcMotorEx.Direction.REVERSE);
         IntakeMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         OTMotor = hardwareMap.get(DcMotorEx .class, "OTMotor");
         OTMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
