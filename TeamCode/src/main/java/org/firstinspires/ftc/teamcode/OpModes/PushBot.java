@@ -27,7 +27,6 @@ public class PushBot extends OpMode {
     private Supplier<PathChain> pathChain;
     private TelemetryManager telemetryM;
     private boolean slowMode = false;
-    private double slowModeMultiplier = 0.5;
     private DcMotorEx IntakeMotor;
 
     @Override
@@ -67,20 +66,24 @@ public class PushBot extends OpMode {
             //In case the drivers want to use a "slowMode" you can scale the vectors
 
             //This is the normal version to use in the TeleOp
-            if (!slowMode) follower.setTeleOpDrive(
-                    -gamepad1.left_stick_y,
+            if (!slowMode) {
+                follower.setTeleOpDrive(
+                        -gamepad1.left_stick_x,
+                        -gamepad1.left_stick_y,
+                        -gamepad1.right_stick_x,
+                        false // Field Centric
+                );
+                follower.setMaxPower(1);
+            }
+                //This is how it looks with slowMode on
+            else {follower.setTeleOpDrive(
                     -gamepad1.left_stick_x,
+                    -gamepad1.left_stick_y,
                     -gamepad1.right_stick_x,
                     false // Field Centric
             );
-
-                //This is how it looks with slowMode on
-            else follower.setTeleOpDrive(
-                    -gamepad1.left_stick_x * slowModeMultiplier,
-                    -gamepad1.left_stick_y * slowModeMultiplier,
-                    -gamepad1.right_stick_x * slowModeMultiplier,
-                    false // Field Centric
-            );
+            follower.setMaxPower(0.5);
+            }
         }
 /*
         //Automated PathFollowing
@@ -100,12 +103,6 @@ public class PushBot extends OpMode {
             slowMode = !slowMode;
         }
 
-        //Optional way to change slow mode strength
-        if (gamepad1.xWasPressed()) {
-            slowModeMultiplier += 0.25;
-        }
-
-        //Optional way to change slow mode strength
         IntakeMotor.setPower(gamepad2.left_stick_y*-100); //We love over voltage
 
         telemetryM.debug("position", follower.getPose());

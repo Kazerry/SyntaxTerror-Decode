@@ -25,9 +25,9 @@ public class TurretTest extends OpMode {
     private DcMotorEx TurretMotor;
     private PIDController pid;
     private double turretPower;
-    public static double kP = 0.02;
+    public static double kP = 0.3;
     public static double kI = 0.00;
-    public static double kD = 0.001;
+    public static double kD = 0.0001;
     public static double DeadDeg = 1.5;
     private double setpoint = 0;
     private Follower follower;
@@ -55,6 +55,12 @@ public class TurretTest extends OpMode {
     @Override
     public void start(){
         follower.startTeleopDrive();
+        follower.setTeleOpDrive(
+                -gamepad1.left_stick_x,
+                -gamepad1.left_stick_y,
+                -gamepad1.right_stick_x,
+                true
+        );
     }
 
     @Override
