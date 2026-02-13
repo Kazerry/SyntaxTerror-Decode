@@ -20,8 +20,10 @@ public class Constants {
             .useSecondaryTranslationalPIDF(true)
             .useSecondaryHeadingPIDF(true)
             .useSecondaryDrivePIDF(true)
-            .translationalPIDFCoefficients(new PIDFCoefficients(0.05, 0, 0.02, 0))
-            .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.3,0,0.01,0.015))
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.2, 0, 0.02, 0))
+            .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.3,0,0.01,0.04))
+            .headingPIDFCoefficients(new PIDFCoefficients(1, 0, 0.01, 0.01))
+            .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(1,0,0.08,0.03))
             .mass(10.89); //add mass in kg here 7.53 without turret
 
     public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
@@ -40,11 +42,11 @@ public class Constants {
             .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE);
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
-            .forwardPodY(-3.66)
-            .strafePodX(-6.43)
+            .forwardPodY(-4)
+            .strafePodX(-6.375)
             .distanceUnit(DistanceUnit.INCH)
             .hardwareMapName("pinpoint")
-            .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
+            .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD)
             .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
             .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);
 

@@ -142,7 +142,7 @@ public class TurretOPBlue extends OpMode {
 
         //TurretMotor.setPower(gamepad2.right_stick_x*0.25);
         if (gamepad2.right_stick_y >= 0.5 || gamepad1.right_trigger >= 0.5) {
-            OTMotor.setPower(1);
+            OTMotor.setPower(100);
             tServo.setPower(1);
         } else {
             OTMotor.setPower(0);
