@@ -24,6 +24,8 @@ public class Constants {
             .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.3,0,0.01,0.04))
             .headingPIDFCoefficients(new PIDFCoefficients(1, 0, 0.01, 0.01))
             .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(1,0,0.08,0.03))
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.1,0.0,0.01,0.6,0.0))
+            .secondaryDrivePIDFCoefficients(new FilteredPIDFCoefficients(0.1,0,0.01,0.6,0.01))
             .mass(10.89); //add mass in kg here 7.53 without turret
 
     public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
