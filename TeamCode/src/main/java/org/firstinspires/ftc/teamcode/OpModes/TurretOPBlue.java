@@ -3,6 +3,7 @@ import static org.firstinspires.ftc.teamcode.Config.Localization.LimelightFiduci
 import static org.firstinspires.ftc.teamcode.Config.RobotConstants.kD;
 import static org.firstinspires.ftc.teamcode.Config.RobotConstants.kI;
 import static org.firstinspires.ftc.teamcode.Config.RobotConstants.kP;
+import static org.firstinspires.ftc.teamcode.Config.RobotConstants.autoPose;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
@@ -30,13 +31,11 @@ import java.lang.Math.*;
 @TeleOp
 public class TurretOPBlue extends OpMode {
     private Follower follower;
-    public static Pose startingPose; //See ExampleAuto to understand how to use this
+    public static Pose startingPose = new Pose(autoPose.getX(), autoPose.getY(), autoPose.getHeading()-Math.toRadians(90));
     private boolean automatedDrive;
     private Supplier<PathChain> pathChain;
     private TelemetryManager telemetryM;
     private boolean slowMode = false;
-    private double slowModeMultiplier = 0.5;
-    //private DcMotorEx TurretMotor;
     private DcMotorEx IntakeMotor;
     private DcMotorEx OTMotor;
     private Limelight3A limelight;
@@ -48,7 +47,7 @@ public class TurretOPBlue extends OpMode {
     @Override
     public void init() {
         follower = Constants.createFollower(hardwareMap);
-        follower.setStartingPose(startingPose == null ? new Pose() : startingPose);
+        follower.setStartingPose(startingPose);
         follower.update();
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
 
@@ -73,8 +72,8 @@ public class TurretOPBlue extends OpMode {
         tServo = hardwareMap.get(CRServo.class, "tServo");
 
         pathChain = () -> follower.pathBuilder() //Lazy Curve Generation
-                .addPath(new Path(new BezierLine(follower::getPose, new Pose(45, 98))))
-                .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, Math.toRadians(45), 0.8))
+                .addPath(new Path(new BezierLine(follower::getPose, new Pose(103.5, 33.5,Math.toRadians(90)))))
+                .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, Math.toRadians(90), 0.8))
                 .build();
     }
 
@@ -122,7 +121,7 @@ public class TurretOPBlue extends OpMode {
             follower.setMaxPower(0.5);
             }
         }
-/*
+
         //Automated PathFollowing
         if (gamepad1.aWasPressed()) {
             follower.followPath(pathChain.get());
@@ -134,25 +133,26 @@ public class TurretOPBlue extends OpMode {
             follower.startTeleopDrive();
             automatedDrive = false;
         }
-*/
+
         //Slow Mode
         if (gamepad1.rightBumperWasPressed()) {
             slowMode = !slowMode;
         }
 
         //TurretMotor.setPower(gamepad2.right_stick_x*0.25);
-        if (gamepad2.right_stick_y >= 0.5 || gamepad1.right_trigger >= 0.5) {
+        if (gamepad1.left_trigger >= 0.5 && gamepad1.right_trigger >= 0.5) {
             OTMotor.setPower(100);
-            tServo.setPower(1);
-        } else {
-            OTMotor.setPower(0);
-            tServo.setPower(0);
-        }
-        if (gamepad2.left_stick_y >= 0.5 || gamepad1.left_trigger >= 0.5) {
             IntakeMotor.setPower(100);
-            tServo.setPower(1);
+            tServo.setPower(10);
+        } else if (gamepad1.right_trigger >= 0.5) {
+            OTMotor.setPower(100);
+            tServo.setPower(10);
+        } else if (gamepad1.left_trigger >= 0.5) {
+            IntakeMotor.setPower(100);
+            tServo.setPower(10);
         } else {
             IntakeMotor.setPower(0);
+            OTMotor.setPower(0);
             tServo.setPower(0);
         }
         telemetry.addData("TX in degrees", TX);

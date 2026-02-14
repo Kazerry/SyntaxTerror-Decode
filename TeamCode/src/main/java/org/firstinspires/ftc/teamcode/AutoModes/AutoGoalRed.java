@@ -17,8 +17,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.Config.Localization.LimelightFiducial;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous(name = "BlueGoalAuto", group = "Autonomous")
-public class AutoGoalBlue extends OpMode{
+@Autonomous(name = "RedGoalAuto", group = "Autonomous")
+public class AutoGoalRed extends OpMode{
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
     private int pathState;
@@ -32,11 +32,11 @@ public class AutoGoalBlue extends OpMode{
     private Limelight3A limelight;
     private LimelightFiducial LimeInit;
 
-    private final Pose startPose = new Pose(22, 125, Math.toRadians(144));
-    private final Pose oPose1 = new Pose(44,84);
-    private final Pose intakePose1 = new Pose(15,84);
-    private final Pose shootPose1 = new Pose(55,84);
-    private final Pose intakePose2 = new Pose(15,60);
+    private final Pose startPose = new Pose(122, 125, Math.toRadians(36));
+    private final Pose oPose1 = new Pose(100,84);
+    private final Pose intakePose1 = new Pose(129,84);
+    private final Pose shootPose1 = new Pose(89,84);
+    private final Pose intakePose2 = new Pose(129,60);
     private final Pose shootPose2 = new Pose(65,70);
     private final Pose intakePose3 = new Pose(15,35);
     private final Pose shootPose3 = new Pose(67,67);
@@ -54,7 +54,7 @@ public class AutoGoalBlue extends OpMode{
         shoot1 = new Path(new BezierLine(intakePose1, shootPose1));
         shoot1.setConstantHeadingInterpolation(Math.toRadians(90));
 
-        intake2 = new Path(new BezierCurve(shootPose1, new Pose(57, 57), intakePose2));
+        intake2 = new Path(new BezierCurve(shootPose1, new Pose(87, 57), intakePose2));
         intake2.setConstantHeadingInterpolation(Math.toRadians(90));
 
         shoot2 = new Path(new BezierLine(intakePose2, shootPose2));
@@ -207,7 +207,7 @@ public class AutoGoalBlue extends OpMode{
         tServo = hardwareMap.get(CRServo.class, "tServo");
 
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
-        limelight.pipelineSwitch(1); //1 blue 0 red
+        limelight.pipelineSwitch(0); //1 blue 0 red
         LimeInit = new LimelightFiducial();
         LimeInit.LimelightInit(limelight);
 

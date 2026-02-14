@@ -17,8 +17,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.Config.Localization.LimelightFiducial;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous(name = "BlueGoalAuto", group = "Autonomous")
-public class AutoGoalBlue extends OpMode{
+@Autonomous(name = "BlueParkGoal", group = "Autonomous")
+public class AutoGoalBluePark extends OpMode{
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
     private int pathState;
@@ -33,123 +33,21 @@ public class AutoGoalBlue extends OpMode{
     private LimelightFiducial LimeInit;
 
     private final Pose startPose = new Pose(22, 125, Math.toRadians(144));
-    private final Pose oPose1 = new Pose(44,84);
-    private final Pose intakePose1 = new Pose(15,84);
-    private final Pose shootPose1 = new Pose(55,84);
-    private final Pose intakePose2 = new Pose(15,60);
-    private final Pose shootPose2 = new Pose(65,70);
-    private final Pose intakePose3 = new Pose(15,35);
-    private final Pose shootPose3 = new Pose(67,67);
-    private final Pose parkPose = new Pose(40.5,33.5);
+    private final Pose parkPose = new Pose(103.5,33.5);
 
-    private Path intake1,shoot1,intake2,oMove1,shoot2,intake3,shoot3,park;
+    private Path park;
 
     public void buildPaths() {
-        oMove1 = new Path(new BezierLine(startPose, oPose1));
-        oMove1.setLinearHeadingInterpolation(Math.toRadians(144),Math.toRadians(90));
 
-        intake1 = new Path(new BezierLine(oPose1, intakePose1));
-        intake1.setConstantHeadingInterpolation(Math.toRadians(90));
-
-        shoot1 = new Path(new BezierLine(intakePose1, shootPose1));
-        shoot1.setConstantHeadingInterpolation(Math.toRadians(90));
-
-        intake2 = new Path(new BezierCurve(shootPose1, new Pose(57, 57), intakePose2));
-        intake2.setConstantHeadingInterpolation(Math.toRadians(90));
-
-        shoot2 = new Path(new BezierLine(intakePose2, shootPose2));
-        shoot2.setConstantHeadingInterpolation(Math.toRadians(90));
-
-        intake3 = new Path(new BezierCurve(shootPose2, new Pose(67, 35), intakePose3));
-        intake3.setConstantHeadingInterpolation(Math.toRadians(90));
-
-        shoot3 = new Path(new BezierLine(intakePose3, shootPose3));
-        shoot3.setConstantHeadingInterpolation(Math.toRadians(90));
-
-        park = new Path(new BezierLine(shootPose3, parkPose));
-        park.setConstantHeadingInterpolation(Math.toRadians(90));
+        park = new Path(new BezierLine(startPose, parkPose));
+        park.setLinearHeadingInterpolation(Math.toRadians(144),Math.toRadians(90));
     }
     public void autonomousPathUpdate(){
         switch (pathState){
             case 0:
                 setActionState(0);
-                follower.followPath(oMove1);
+                follower.followPath(park);
                 setPathState(1);
-                break;
-            case 1:
-                if(follower.atParametricEnd()) {
-                    setActionState(1);
-                    follower.setMaxPower(0.5);
-                    follower.followPath(intake1);
-                    setPathState(2);
-                }
-                break;
-            case 2:
-                if(follower.atParametricEnd()) {
-                    setActionState(0);
-                    follower.setMaxPower(1);
-                    follower.followPath(shoot1);
-                    setPathState(3);
-                }
-                break;
-            case 3:
-                if(follower.atParametricEnd()) {
-                    setActionState(2);
-                    setPathState(4);
-                }
-                break;
-            case 4:
-                //extra time for shooting
-                if(actionTimer.getElapsedTimeSeconds() > 2) {
-                    follower.followPath(intake2);
-                    follower.setMaxPower(0.5);
-                    setActionState(1);
-                    setPathState(5);
-                }
-                break;
-            case 5:
-                if(follower.atParametricEnd()) {
-                    follower.setMaxPower(1);
-                    setActionState(0);
-                    follower.followPath(shoot2);
-                    setPathState(6);
-                }
-                break;
-            case 6:
-                if(follower.atParametricEnd()) {
-                    setActionState(2);
-                    setPathState(7);
-                }
-                break;
-            case 7:
-                //extra time for shooting
-                if(actionTimer.getElapsedTimeSeconds() > 2) {
-                    setActionState(1);
-                    follower.setMaxPower(0.5);
-                    follower.followPath(intake3);
-                    setPathState(8);
-                }
-                break;
-            case 8:
-                if(follower.atParametricEnd()) {
-                    follower.setMaxPower(1);
-                    setActionState(0);
-                    follower.followPath(shoot3);
-                    setPathState(9);
-                }
-                break;
-            case 9:
-                if(follower.atParametricEnd()) {
-                    setActionState(2);
-                    setPathState(10);
-                }
-                break;
-            case 10:
-                if(actionTimer.getElapsedTimeSeconds() > 2) {
-                    setActionState(0);
-                    //follower.followPath(park);
-                    setPathState(11);
-                }
                 break;
         }
     }
@@ -161,28 +59,33 @@ public class AutoGoalBlue extends OpMode{
     public void autonomousActionUpdate(){
         switch (actionState){
             case 0:
+                actionTimer.resetTimer();
                 OTMotor.setPower(0);
                 tServo.setPower(0);
                 IntakeMotor.setPower(0);
                 //turn things off
                 break;
             case 1:
+                actionTimer.resetTimer();
                 tServo.setPower(10);
                 IntakeMotor.setPower(10);
                 //Intake stuff
                 break;
             case 2:
+                actionTimer.resetTimer();
                 tServo.setPower(10);
                 OTMotor.setPower(10);
                 //Outtake stuff!
                 break;
             case 3:
+                actionTimer.resetTimer();
                 OTMotor.setPower(10);
                 tServo.setPower(10);
                 IntakeMotor.setPower(10);
                 //Everything on
                 break;
             case 4:
+                actionTimer.resetTimer();
                 break;
         }
     }
