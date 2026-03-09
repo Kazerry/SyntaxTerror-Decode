@@ -31,7 +31,7 @@ import java.lang.Math.*;
 @TeleOp
 public class TurretOPRed extends OpMode {
     private Follower follower;
-    public static Pose startingPose = new Pose(autoPose.getX(), autoPose.getY(), autoPose.getHeading()+Math.toRadians(90));
+    public static Pose startingPose = new Pose(autoPose.getX(), autoPose.getY(), autoPose.getHeading()-Math.toRadians(90));
     private boolean automatedDrive;
     private Supplier<PathChain> pathChain;
     private TelemetryManager telemetryM;

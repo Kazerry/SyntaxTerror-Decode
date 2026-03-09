@@ -32,8 +32,8 @@ public class AutoGoalRedPark extends OpMode{
     private Limelight3A limelight;
     private LimelightFiducial LimeInit;
 
-    private final Pose startPose = new Pose(90, 7.5, Math.toRadians(36));
-    private final Pose parkPose = new Pose(40.5,33.5);
+    private final Pose startPose = new Pose(122, 125, Math.toRadians(36));
+    private final Pose parkPose = new Pose(122,100);
 
     private Path park;
 

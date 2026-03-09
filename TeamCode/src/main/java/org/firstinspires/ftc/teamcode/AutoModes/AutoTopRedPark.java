@@ -32,15 +32,15 @@ public class AutoTopRedPark extends OpMode{
     private Limelight3A limelight;
     private LimelightFiducial LimeInit;
 
-    private final Pose startPose = new Pose(122, 125, Math.toRadians(36));
-    private final Pose parkPose = new Pose(40.5,33.5);
+    private final Pose startPose = new Pose(90, 7.5, Math.toRadians(180));
+    private final Pose parkPose = new Pose(90,33.5);
 
     private Path park;
 
     public void buildPaths() {
 
         park = new Path(new BezierLine(startPose, parkPose));
-        park.setLinearHeadingInterpolation(Math.toRadians(36),Math.toRadians(90));
+        park.setConstantHeadingInterpolation(180);
     }
     public void autonomousPathUpdate(){
         switch (pathState){
